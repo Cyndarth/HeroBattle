@@ -8,6 +8,7 @@
  *    Handle characters with broken image links. For example, Gog returns a 404.
  *    Handle null values in biography. For exmaple, Ethan Hunt has a null Publisher.
  *    Handle very long biography fields. For example, Nightwing can push the power stats down below his portrait in smaller viewports.
+ *    Make it mobile-friendly.
  */
 
 app
@@ -66,14 +67,18 @@ app
         .then(function (d) {
           $scope.fighters[index].results = [];
 
+          if (d.data.error) {
+            //we got an error so don't try to iterate through the list
+            $scope.fighters[index].error = d.data.error;
+            return;
+          }
+
           //only return characters that have power stats
           for (var i = 0; i < d.data.results.length; i++)
             if (d.data.results[i].powerstats.intelligence !== 'null')
               $scope.fighters[index].results.push(d.data.results[i]);
 
-          if (d.data.error)
-            $scope.fighters[index].error = d.data.error;
-          else if ($scope.fighters[index].results.length === 0)
+          if ($scope.fighters[index].results.length === 0)
             $scope.fighters[index].error = 'character with given name is missing power stats';
           else if ($scope.fighters[index].results.length === 1) //if we just have one result auto-select it
             $scope.fighters[index].stats = $scope.fighters[index].results[0];
