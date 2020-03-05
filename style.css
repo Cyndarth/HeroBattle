@@ -50,3 +50,20 @@ label{
 button:disabled{
   cursor:default;
 }
+
+.dropdown{
+  display:inline;
+}
+
+.shamelessplug{
+  float:right;
+  font-size:9px;
+}
+
+.search .text{
+  width:200px;
+}
+
+.search btn{
+  margin:0px;
+}

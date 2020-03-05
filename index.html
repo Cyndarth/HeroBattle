@@ -12,7 +12,14 @@
 <body>
   <div ng-controller="fightController">
     <div class="fight">
-      <button class="btn btn-primary" ng-click="randomize()" ng-disabled="fighting">Random!</button>
+
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="ddFightersButton" ng-disabled="fighting || winner">{{fighterCount}} Fighters</button>
+        <div class="dropdown-menu" aria-labelledby="ddFightersButton">
+          <a class="dropdown-item" ng-click="setFighterCount($index+2)" ng-repeat="x in [].constructor(11) track by $index">{{$index+2}}</a>
+        </div>
+      </div>
+      <button class="btn btn-primary" ng-click="randomize()" ng-disabled="fighting">Shuffle</button>
       <button class="btn btn-primary" ng-click="fight()" ng-disabled="fighting || winner || !allValid()" ng-show="fighterCount > 1">Fight!</button>
       <button class="btn btn-primary" ng-click="reset()" ng-disabled="!winner">Reset</button>
     </div>
@@ -23,9 +30,9 @@
     <div class="row">
       <div ng-repeat="fighter in fighters" class="col-6 fighter" ng-class="{dead: fighter.dead, winner: fighter.winner}">
 
-        <form ng-submit="search($index)">
-          <input type="text" ng-model="fighter.searchText" size="30" ng-disabled="fighting || winner">
-          <input class="btn-primary" type="submit" value="search" ng-disabled="fighting || winner">
+        <form ng-submit="search($index)" class="search">
+          <input class="text" type="text" ng-model="fighter.searchText" ng-disabled="fighting || winner">
+          <input class="btn btn-primary btn-sm" type="submit" value="search" ng-disabled="fighting || winner">
         </form>
 
         <div ng-repeat="result in fighter.results" ng-show="!fighter.stats">
@@ -61,5 +68,11 @@
       </div>
     </div>
   </div>
+
+  <div class="shamelessplug"><a href="http://comicbooklist.com/">comicbooklist.com</a></div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -2,17 +2,18 @@
  * Change fighterCount to any integer from 1 to 12 if you want to change the size of the battle. Things start to break down with numbers much higher than that.
  *
  * TODO:
- *    Add a drop-down to let the user choose the number of characters.
  *    Unit tests!
  *    Get my API key out of superHeroService.js (this would require a server-side wrapper around all API calls).
+ *    Handle ties. There is a VERY small chance of two characters with a non-random stat value getting in an infinite battle against each other.
+ *    Handle characters with broken image links. For example, Gog returns a 404.
+ *    Handle null values in biography. For exmaple, Ethan Hunt has a null Publisher.
+ *    Handle very long biography fields. For example, Nightwing can push the power stats down below his portrait in smaller viewports.
  */
 
 app
-  .controller('fightController', function ($scope, $interval, $location, SuperHeroService, RandomService) {
+  .controller('fightController', function ($scope, $interval, SuperHeroService, RandomService) {
 
-    $scope.fighterCount = parseInt($location.search().count);
-    if (!$scope.fighterCount || $scope.fighterCount > 12 || $scope.fighetCount < 1)
-      $scope.fighterCount = 4;
+    $scope.fighterCount = 4;
     $scope.fighters = Array.apply(null, Array($scope.fighterCount)).map(function () { return {}; });//init the array to full-size with empty objects
 
     //all the fields we want displayed next to the character image
@@ -42,6 +43,18 @@ app
       for (var i = 0; i < fields.length; i++)
         prop = prop[fields[i]];
       return Array.isArray(prop) ? prop.join(', ') : prop;
+    };
+
+    $scope.setFighterCount = function (count) {
+      $scope.fighterCount = count;
+      while ($scope.fighters.length > count)
+        $scope.fighters.pop();
+
+      while ($scope.fighters.length < count) {
+        $scope.fighters.push({});
+        $scope.getRandom($scope.fighters.length - 1);
+      }
+      
     };
 
     //search for a character by the name that's been typed in the search box
