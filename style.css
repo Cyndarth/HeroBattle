@@ -1,0 +1,52 @@
+﻿body{
+  font-size:9pt;
+  padding:10px;
+}
+
+.fighter{
+  margin-bottom:10px
+}
+
+.heroImage{
+  width:200px;
+  float:left;
+}
+label{
+  font-weight:bold;
+  text-transform:capitalize;
+}
+
+.alert-primary{
+  text-align:center;
+  font-weight:bold;
+}
+
+.fight{
+  width:100%;
+  margin:10px;
+  text-align:center;
+}
+
+.stats .alert{
+  padding:0px;
+  margin:1px;
+}
+
+.dead img {
+  opacity: 0.40;
+  filter: alpha(opacity=40); /* ie */
+}
+
+.winner{
+  background-color:bisque;
+}
+
+.output{
+  padding:10px;
+  margin:10px;
+  height:200px;
+}
+
+button:disabled{
+  cursor:default;
+}

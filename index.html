@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html ng-app="fightApp">
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="app/app.js"></script>
+  <script src="app/controllers/fightCtrl.js"></script>
+  <script src="app/services/randomService.js"></script>
+  <script src="app/services/superHeroService.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div ng-controller="fightController">
+    <div class="fight">
+      <button class="btn btn-primary" ng-click="randomize()" ng-disabled="fighting">Random!</button>
+      <button class="btn btn-primary" ng-click="fight()" ng-disabled="fighting || winner || !allValid()" ng-show="fighterCount > 1">Fight!</button>
+      <button class="btn btn-primary" ng-click="reset()" ng-disabled="!winner">Reset</button>
+    </div>
+
+    <div ng-show="winner" class="alert alert-primary col-12 center">
+      {{winner.stats.name}} wins!
+    </div>
+    <div class="row">
+      <div ng-repeat="fighter in fighters" class="col-6 fighter" ng-class="{dead: fighter.dead, winner: fighter.winner}">
+
+        <form ng-submit="search($index)">
+          <input type="text" ng-model="fighter.searchText" size="30" ng-disabled="fighting || winner">
+          <input class="btn-primary" type="submit" value="search" ng-disabled="fighting || winner">
+        </form>
+
+        <div ng-repeat="result in fighter.results" ng-show="!fighter.stats">
+          <a href="#" ng-click="fighter.stats = result">{{result.name}}</a>
+        </div>
+
+        <div ng-show="fighter.stats">
+          <img ng-src="{{fighter.stats.image.url}}" class="heroImage" />
+          <div class="row" ng-repeat="row in info">
+            <label class="col-5">{{row.label}}:</label><div class="col">{{getStat(fighter, row.field)}}</div>
+          </div>
+
+          <div class="row stats" ng-repeat="(key, val) in fighter.stats.powerstats">
+            <label class="col-5">{{key}}:</label>
+            <div class="col alert alert-success" ng-show="!fighter.disabled[key]">{{dice(val)}}</div>
+            <div class="col alert alert-dark" ng-show="fighter.disabled[key]">{{fighter.disabled[key]}}</div>
+          </div>
+          <div class="col-12 alert alert-danger" ng-show="fighter.dead">defeated by {{fighter.dead.stats.name}}</div>
+        </div>
+
+        <div ng-show="fighter.error" class="alert-danger">
+          {{fighter.error}}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="output" ng-show="fighting || winner">
+      <div ng-repeat="round in fightText | orderBy:'-'" class="row">
+        <div class="col-12 font-weight-bold" ng-show="round.dead">{{round.dead}} is defeated!</div>
+        <div class="col-5">{{round.attacker.name}} uses their {{round.attackStat}} ({{round.attackDice}}) to attack {{round.defender.name}}'s {{round.defendStat}} ({{round.defendDice}}).</div>
+        <div class="col-4">{{round.attacker.name}} rolls {{round.attackTotal}} and {{round.result}} against {{round.defender.name}}'s {{round.defendTotal}}.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
