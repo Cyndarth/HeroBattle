@@ -64,11 +64,19 @@ app
 
       SuperHeroService.search(searchText)
         .then(function (d) {
-          $scope.fighters[index].results = d.data.results;
+          $scope.fighters[index].results = [];
+
+          //only return characters that have power stats
+          for (var i = 0; i < d.data.results.length; i++)
+            if (d.data.results[i].powerstats.intelligence !== 'null')
+              $scope.fighters[index].results.push(d.data.results[i]);
+
           if (d.data.error)
             $scope.fighters[index].error = d.data.error;
-          else if (d.data.results.length === 1) //if we just have one result auto-select it
-            $scope.fighters[index].stats = d.data.results[0];
+          else if ($scope.fighters[index].results.length === 0)
+            $scope.fighters[index].error = 'character with given name is missing power stats';
+          else if ($scope.fighters[index].results.length === 1) //if we just have one result auto-select it
+            $scope.fighters[index].stats = $scope.fighters[index].results[0];
       });
     };
 
